@@ -1,0 +1,9 @@
+¿Qué ventaja concreta notaste al usar templates en tu clase Lista, comparado con haberla hecho solo para un tipo de dato (por ejemplo, solo enteros)? Da un ejemplo de tu propio código.
+La ventaja principal que noté al usar templates fue la manera de reutilizar código y ahorrar líneas. Ya que sin templates habría tenido que hacer clases separadas como ListInt y ListString y agregarles los mismos métodos con la misma estructura. En el código, pude usar la misma clase List para crear la lista de enteros y una de textos sin tener que duplicar código en el archivo header. ("List<int> dataInt;" y "List<std::string> dataStr;")
+
+¿Qué parte de la actividad —ya sea el uso de templates o el reto de insertAt/removeAt— te costó más trabajo entender o depurar? ¿Qué hiciste para resolverlo?
+La parte que más me costó trabajo fue la implementación de insertAt y removeAt. Ya que el reto principal para mí fue comprender cómo funcionaban los desplazamientos de los elementos y asegurarme de no salirme de los límites del vector.
+Además, al momento de depurar el código, tuve algunos errores de compilación por confundir los nombres de las variables (como nombrar al parámetro igual que el atributo vector data)
+
+Si tuvieras que explicarle a un compañero qué es un template en C++ usando tus propias palabras, sin tecnicismos, ¿qué le dirías?
+Le diría que es basicamente una plantilla que se puede usar de manera general sin tener que establecer un tipo de dato en específico. Al contrario, todos son bienvenidos y pueden convivir dentro de esa template sin tener que hacer espacios designados para cada tipo de dato.
