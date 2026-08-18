@@ -38,7 +38,7 @@ void List<T>::insert(T val) {
 template <typename T>
 void List<T>::removeLast(){
     if (size > 0) {
-        std::cout << "El último elemento a eliminar es:" << data.back() << std::endl;
+        std::cout << "El ultimo elemento a eliminar es:" << data.back() << std::endl;
         data.pop_back();
         size--;
     }
@@ -54,7 +54,7 @@ if (pos >= 0 && pos < size) {
     return data[pos];
 }  
 else {
-    std::cout << "posición no válida" << std::endl;
+    std::cout << "posicion no valida" << std::endl;
     return T(); 
 }
 }
@@ -85,7 +85,7 @@ T List<T>::getMax() const {
 template <typename T>
 void List<T>::print() const {
     for (int i = 0; i < size; i++) {
-        std::cout << "[" << i << "] – " << data[i] << "\n";
+        std::cout << "[" << i << "] - " << data[i] << std::endl;
 }
 }
 
@@ -94,7 +94,7 @@ void List<T>::print() const {
 template <typename T>
 void List<T>::insertAt(int pos, T val) {
     if (pos < 0 || pos > size){
-        std::cout << "Posición no válida" << std::endl;
+        std::cout << "Posición no valida" << std::endl;
         return;
     }
     data.insert(data.begin() + pos, val);
@@ -105,7 +105,7 @@ void List<T>::insertAt(int pos, T val) {
 template <typename T>
 void List<T>::removeAt(int pos) {
     if (pos < 0 || pos >= size) {
-        std::cout << "Posición no válida" << std::endl;
+        std::cout << "Posición no valida" << std::endl;
         return;
     }
     T eliminado = data[pos];

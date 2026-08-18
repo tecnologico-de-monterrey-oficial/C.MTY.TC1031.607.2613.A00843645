@@ -30,26 +30,26 @@ int main(){
     data.print();
 
     // insertAt
-    cout << "\n Insertando 20 en la posición 1" << endl;
+    cout << "Insertando 20 en la posicion 1" << endl;
     data.insertAt(1, 20);
     data.print();
 
     //getData
-    cout << "\n--- Obteniendo el dato en la posición 2 (getData) ---" << endl;
+    cout << "Obteniendo el dato en la posicion 2 (getData)" << endl;
     cout << "El dato en pos 2 es: " << data.getData(2) << endl;
 
     //getMax
-    cout << "\n--- Obteniendo el mayor valor (getMax) ---" << endl;
-    cout << "El valor máximo es: " << data.getMax() << endl;
+    cout << "Obteniendo el mayor valor (getMax)" << endl;
+    cout << "El valor maximo es: " << data.getMax() << endl;
 
     // removeAt
-    cout << "\n--- Eliminando elemento en la posición 1 (removeAt) ---" << endl;
+    cout << " Eliminando elemento en la posicion 1 (removeAt)" << endl;
     data.removeAt(1);
-    cout << "Lista después de removeAt:" << endl;
+    cout << "Lista despues de removeAt:" << endl;
     data.print();
 
     //removeLast
-    cout << "\n--- Eliminando el último elemento (removeLast) ---" << endl;
+    cout << " Eliminando el ultimo elemento (removeLast)" << endl;
     data.removeLast();
     cout << "Lista final de enteros:" << endl;
     data.print();
@@ -62,7 +62,7 @@ cout << "\n----- Listas de strings -----" << endl;
     cout << "Contenido de la lista (size: " << things.getSize() << "):" << endl;
     things.print();
 
-    cout << "\n Obteniendo el dato en la posición 1" << endl;
+    cout << "Obteniendo el dato en la posicion 1" << endl;
     cout << "El dato en pos 1 es: " << things.getData(1) << endl;
 
     cout << things.getMax() << " es el mayor valor" << endl;
