@@ -18,6 +18,7 @@ void swap(vector<T> &list, int i, int j)
 
 }
 
+template <typename T> 
 void swapSort(vector<T> list) {
     //iteramos todos los elementos de la lista hasta el penúltimo 
     for (int i=0; i < list.size()-1; i++){
@@ -34,6 +35,7 @@ void swapSort(vector<T> list) {
 }
 }
 
+template <typename T> 
 // en que falle: si comprendo la parte de la condicion, no comprendo como separar los dos for anidados 
 void bubbleSort(vector<T> list) {
     //iterar desde n hasta 1
@@ -50,6 +52,27 @@ void bubbleSort(vector<T> list) {
 }
 }
 
+template <typename T>
+void selectionSort(vector<T> list) {
+    //asume que el primero de la lista es el más pequeño y comienza a comparar 
+    //min_value = list[0];
+    int n = list.size(); //conocer el tamano de la lista 
+    for (int i=n; i<n-1; i++) { //aqui puse un (i<n-1) porque se supone que si llega al penultimo valor y hace sort -> el ultimo valor ya estaría acomodado
+        //asumir que la posición en la que está es el minimo 
+        int minimo = list[i];
+        for (int j=i+1; j<n; j++){ //aqui puse a j como i+1 porque le interesa hacer la comparación con el siguiente.
+            //ahora si, si es menor al valor minimo 
+            if (list[j]<minimo) { 
+                //actualizar el nuevo
+                minimo = list[j]; //ahora el numero que reconoció como más pequeño se guardará en la variable minimo 
+            }
+            //ya que lo identificas, haces swap
+            swap(list, list[i], minimo);
+
+        }
+    }
+}
+
 
 
 int main() {
@@ -61,9 +84,13 @@ int main() {
     print(list);
 
     cout << "BUBBLE SORT" << endl; 
-    cout << 
+    //cout << 
 
-
+    //Selection sort 
+    cout << "Lista original: " << endl;
+    print(list);
+    cout << "Lista ordenada: " << endl;
+    selectionSort(list);
 
     return 0;
 }
