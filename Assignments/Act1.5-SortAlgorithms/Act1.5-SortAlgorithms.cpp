@@ -153,6 +153,117 @@ void mergeSort(vector<T> &list, int low, int high) {
     merge(list, low, mid, high);
 }
 
+// MERGE PROFE (en clase 8)
+template <typename T>
+void merge_profe(vector<T> &list, int left, int mid, int right) {
+    //generamos la lista de left a mid 
+    //generamos la lista de mid+1 a right
+    vector<T> leftList;
+    //iteramos la lista de left a mid 
+    for (int i=left; i<=mid; i++) {
+        leftList.push_back(list[i]);
+    }
+    //generamos la lista de mid+1 a right
+    vector<T> rightList;
+    for (int j=mid+1; j<=right; j++) {
+        rightList.push_back(list[j]);
+    }
+    //combinamos las dos listas 
+    //definir variable auxiliar  que contenga el indice a actualizar (es el que se va a ir recorriendo en la lista original)
+    int index = left;
+    //inicializamos el indice del lado izquierdo
+    int i=0;
+    //inicializamos el indice del lado derecho
+    int j=0;
+    //iteramos mientras no se acaben las listas
+    while (i<leftList.size() && j<rightList.size()){
+        //comparamos el valor de i de la lista izquierda con el valor de j de la lista derecha
+        if (leftList[i] <= rightList[j]) {
+            //si el valor de i es menor o igual al valor de j
+            //actualizamos la lista original con el valor de i
+            list[index] = leftList[i];
+            //incrementamos el valor de i
+            i++;
+        } else {
+            //si el valor de j es menor al valor de i
+            //actualizamos la lista original con el valor de j
+            list[index] = rightList[j];
+            //incrementamos el valor de j
+            j++;
+        }
+        index++;
+    }
+    //vaciamos la lista del lado izquierdo
+    while (i<leftList.size()) {
+        //actualizamos list en index con el valor de listLeft en i
+        list[index] = leftList[i];
+        i++;
+        index++;
+    }
+    //vaciamos la lista del lado derecho
+    while (j<rightList.size()) {
+        //actualizamos list en index con el valor de listRight en j
+        list[index] = rightList[j];
+        j++;
+        index++;
+    }
+
+}
+
+// MERGE SORT PROFE (en clase 8)
+template <typename T>
+void mergeSort_profe(vector<T> &list, int left, int right) {
+    //condicion de control es que left sea menor que right
+    if (left < right) {
+        //calculamos mid
+        int mid = (left + right) / 2;
+        //ordenar de left a mid
+        mergeSort(list, left, mid);
+        //ordenar de mid+1 a right
+        mergeSort(list, mid + 1, right);
+        //combinados las dos partes de la lista 
+        merge(list, left, mid, right);
+    }
+}
+
+// QUICK SORT (pt. 2)
+template <typename T>
+int getPivot(vector<T> &list, int left, int right){
+    //crear variable aux con el valor de left-1
+    int aux = left-1;
+    //crear variable pivot con el valor de right
+    int pivot = right;
+    //iteramos desde left hasta pivot - 1 (< pivot)
+    for (int i=left; i<pivot; i++){
+        //comparamos si el valor de pivot > al valor de i (index)
+        if (list[pivot] > list[i]) {
+            //incrementamos el valor de i 
+            aux++;
+            // intercambiamos aux con i 
+            swap(list, aux, i);
+        }
+    }
+    // incrementamos aux
+    aux++;
+    // intercambiamos aux con pivot
+    swap(list, aux, pivot);
+    //regresamos aux
+    return aux;
+}
+
+// QUICK SORT (pt. 1) (en clase) (esta despues le llama a la función que está arriba)
+template <typename T>
+void quickSort(vector<T> &list, int left, int right) {
+    //recursividad si left<right
+    if (left < right) {
+        int pivot = getPivot(list, left, right);
+        //ordenamos la lista de lado izq del pivote
+        quickSort(list, left, pivot-1);
+
+        quickSort(list, pivot, right);
+    }
+}
+
 template <typename T>
 void print(vector<T> &list) {
     for (int i=0; i<list.size(); i++) {
@@ -185,6 +296,18 @@ int main() {
     cout << "tarea para clase:" << endl;
     cout << "Lista ordenada con Merge Sort" << endl;
     mergeSort(list, 0, list.size() - 1);
+    print(list);
+
+    //QUICK SORT
+    print(listOriginal);
+    cout << "lista ordenada: con Quick Sort" << endl;
+    quickSort(list, 0, list.size()-1);
+    print(list);
+
+    // MERGE SORT DEL PROFE (en clase 8)
+    print(listOriginal);
+    cout << "Lista ordenada con Merge Sort del profe" << endl;
+    mergeSort_profe(list, 0, list.size()-1);
     print(list);
 
     return 0;
