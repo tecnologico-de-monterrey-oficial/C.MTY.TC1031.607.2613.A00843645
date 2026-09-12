@@ -3,91 +3,115 @@
 
 #include <iostream>
 #include <vector>
+#include <string>
+#include <chrono>
+#include <random>
+#include <fstream>
+
 using namespace std;
 
-template <typename T> 
+// 
 
+template <typename T> 
 void swap(vector<T> &list, int i, int j)
 {
-    if (i!=j){
-    //creamos variable temporal
-    T aux = list[i];
-    //cambiamos i por j
-    list[i]=list[j];
-    //cambiamos j por aux
-    list[j] = aux;
+    if (i != j){
+        //creamos variable temporal
+        T aux = list[i];
+        //cambiamos i por j
+        list[i] = list[j];
+        //cambiamos j por aux
+        list[j] = aux;
     }
 }
 
 template <typename T> 
-void swapSort(vector<T> &list) {
+void swapSort(vector<T> &list, long long &comparisons, long long &swaps) {
+    comparisons = 0;
+    swaps = 0;
     //iteramos todos los elementos de la lista hasta el penúltimo 
-    for (int i=0; i < list.size()-1; i++){
-        for (int j=i+1; j<list.size(); j++) {
-        //comparacion para determinar si es menor
-        if (list[j]<list[i])
-        {
-            //si es menor
-            //intercambiamos los valores
-            swap(list, i, j);
-        }
-    }
-
-}
-}
-
-template <typename T> 
-// en que falle: si comprendo la parte de la condicion, no comprendo como separar los dos for anidados 
-void bubbleSort(vector<T> &list) {
-    //iterar desde n hasta 1
-    bool change = true;
-    for (int i=list.size()-1; i>0 && change; i--) {
-        //cambio el valor de change a falso
-        change = false;
-        for (int j=0; j<i; j++) {//se supone que me falta algo en esa condición porque no recorre hasta el ultimo dato cuando va acomodando porque se supone que se asume que los últimos valores ya se van acomodando
-             //la condicion
-            if (list[j] > list[j+1]) { //comparamos el valor de j con el valor de j+1 para determinar si es mayor
-                swap(list, j, j+1);
+    for (int i = 0; i < list.size() - 1; i++){
+        for (int j = i + 1; j < list.size(); j++) {
+            //comparacion para determinar si es menor
+            comparisons++;
+            if (list[j] < list[i])
+            {
+                //si es menor
+                //intercambiamos los valores
+                swap(list, i, j);
+                swaps++;
             }
         }
     }
 }
 
+template <typename T> 
+void bubbleSort(vector<T> &list, long long &comparisons, long long &swaps) {
+    comparisons = 0;
+    swaps = 0;
+    //iterar desde n hasta 1
+    bool change = true;
+    for (int i = list.size() - 1; i > 0 && change; i--) {
+        //cambio el valor de change a falso
+        change = false;
+        for (int j = 0; j < i; j++) {
+            //la condicion
+            comparisons++;
+            if (list[j] > list[j+1]) { //comparamos el valor de j con el valor de j+1 para determinar si es mayor
+                swap(list, j, j+1);
+                swaps++;
+                change = true;
+            }
+        }
+    }
+}
 
 template <typename T>
-void selectionSort(vector<T> &list) {
+void selectionSort(vector<T> &list, long long &comparisons, long long &swaps) {
+    comparisons = 0;
+    swaps = 0;
     //asume que el primero de la lista es el más pequeño y comienza a comparar 
-    //min_value = list[0];
     int n = list.size(); //conocer el tamano de la lista 
-    for (int i=n; i<n-1; i++) { //aqui puse un (i<n-1) porque se supone que si llega al penultimo valor y hace sort -> el ultimo valor ya estaría acomodado
+    for (int i = 0; i < n - 1; i++) { //aqui puse un (i<n-1) porque se supone que si llega al penultimo valor y hace sort -> el ultimo valor ya estaría acomodado
         //hacemos el valor de i como el mas chico
-        T min = i;
-        for (int j=i+1; j<n; j++){ //aqui puse a j como i+1 porque le interesa hacer la comparación con el siguiente.
+        int min = i;
+        for (int j = i + 1; j < n; j++){ //aqui puse a j como i+1 porque le interesa hacer la comparación con el siguiente.
             //ahora si, si es menor al valor minimo 
-            if (list[j]<list[min]) { //si es menor
+            comparisons++;
+            if (list[j] < list[min]) { //si es menor
                 //actualizar el valor de min 
                 min = j; //ahora el numero que reconoció como más pequeño se guardará en la variable minimo 
             }
-            //ya que lo identificas, haces swap
+        }
+        //ya que lo identificas, haces swap
+        if (min != i) {
             swap(list, min, i);
-
+            swaps++;
         }
     }
 }
 
 template <typename T>
-void insertionSort(vector<T> &list){
+void insertionSort(vector<T> &list, long long &comparisons, long long &swaps){
+    comparisons = 0;
+    swaps = 0;
     //aqui el primero se asume que ya esta ordenado entonces empieza con el segundo 
-    for (int i=1; i<list.size(); i++) {
+    for (int i = 1; i < list.size(); i++) {
         //iteramos desde i hasta 0
         //declaramos un contador para ver donde vamos
-        int j=i;
-        while (j>0 && list[j]<list[j-1]){
-            //aqui ya no ocupas hacer if porque va a netrar siempre y cuando sí sea menor entonces te pasas diretco al SWAP
-            //intercambiamos j con j-1
-            swap(list, j,j-1);
-            //decrementamos 
-            j--;
+        int j = i;
+        while (j > 0) {
+            comparisons++;
+            if (list[j] < list[j-1]) {
+                //aqui ya no ocupas hacer if porque va a netrar siempre y cuando sí sea menor entonces te pasas diretco al SWAP
+                //intercambiamos j con j-1
+                swap(list, j, j-1);
+                swaps++;
+                //decrementamos 
+                j--;
+            } else {
+                break;
+            }
         }
     }
 }
@@ -153,79 +177,6 @@ void mergeSort(vector<T> &list, int low, int high) {
     merge(list, low, mid, high);
 }
 
-// MERGE PROFE (en clase 8)
-template <typename T>
-void merge_profe(vector<T> &list, int left, int mid, int right) {
-    //generamos la lista de left a mid 
-    //generamos la lista de mid+1 a right
-    vector<T> leftList;
-    //iteramos la lista de left a mid 
-    for (int i=left; i<=mid; i++) {
-        leftList.push_back(list[i]);
-    }
-    //generamos la lista de mid+1 a right
-    vector<T> rightList;
-    for (int j=mid+1; j<=right; j++) {
-        rightList.push_back(list[j]);
-    }
-    //combinamos las dos listas 
-    //definir variable auxiliar  que contenga el indice a actualizar (es el que se va a ir recorriendo en la lista original)
-    int index = left;
-    //inicializamos el indice del lado izquierdo
-    int i=0;
-    //inicializamos el indice del lado derecho
-    int j=0;
-    //iteramos mientras no se acaben las listas
-    while (i<leftList.size() && j<rightList.size()){
-        //comparamos el valor de i de la lista izquierda con el valor de j de la lista derecha
-        if (leftList[i] <= rightList[j]) {
-            //si el valor de i es menor o igual al valor de j
-            //actualizamos la lista original con el valor de i
-            list[index] = leftList[i];
-            //incrementamos el valor de i
-            i++;
-        } else {
-            //si el valor de j es menor al valor de i
-            //actualizamos la lista original con el valor de j
-            list[index] = rightList[j];
-            //incrementamos el valor de j
-            j++;
-        }
-        index++;
-    }
-    //vaciamos la lista del lado izquierdo
-    while (i<leftList.size()) {
-        //actualizamos list en index con el valor de listLeft en i
-        list[index] = leftList[i];
-        i++;
-        index++;
-    }
-    //vaciamos la lista del lado derecho
-    while (j<rightList.size()) {
-        //actualizamos list en index con el valor de listRight en j
-        list[index] = rightList[j];
-        j++;
-        index++;
-    }
-
-}
-
-// MERGE SORT PROFE (en clase 8)
-template <typename T>
-void mergeSort_profe(vector<T> &list, int left, int right) {
-    //condicion de control es que left sea menor que right
-    if (left < right) {
-        //calculamos mid
-        int mid = (left + right) / 2;
-        //ordenar de left a mid
-        mergeSort(list, left, mid);
-        //ordenar de mid+1 a right
-        mergeSort(list, mid + 1, right);
-        //combinados las dos partes de la lista 
-        merge(list, left, mid, right);
-    }
-}
-
 // QUICK SORT (pt. 2)
 template <typename T>
 int getPivot(vector<T> &list, int left, int right){
@@ -260,7 +211,23 @@ void quickSort(vector<T> &list, int left, int right) {
         //ordenamos la lista de lado izq del pivote
         quickSort(list, left, pivot-1);
 
-        quickSort(list, pivot, right);
+        quickSort(list, pivot + 1, right);
+    }
+}
+
+// ALGORITMO EXTRA (Shell Sort)
+template <typename T>
+void shellSort(vector<T> &list) {
+    int n = list.size();
+    for (int gap = n / 2; gap > 0; gap /= 2) {
+        for (int i = gap; i < n; i++) {
+            T temp = list[i];
+            int j;
+            for (j = i; j >= gap && list[j - gap] > temp; j -= gap) {
+                list[j] = list[j - gap];
+            }
+            list[j] = temp;
+        }
     }
 }
 
@@ -272,43 +239,139 @@ void print(vector<T> &list) {
     cout << endl;
 }
 
+//  FUNCIONES PARA CREAR LISTAS CON DATOS ALEATORIOS 
+
+vector<int> generateRandomInts(int size) {
+    vector<int> vec(size);
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_int_distribution<int> dis(1, 100000);
+    for (int i = 0; i < size; i++) vec[i] = dis(gen);
+    return vec;
+}
+
+vector<double> generateRandomDoubles(int size) {
+    vector<double> vec(size);
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_real_distribution<double> dis(1.0, 100000.0);
+    for (int i = 0; i < size; i++) vec[i] = dis(gen);
+    return vec;
+}
+
+vector<string> generateRandomStrings(int size) {
+    vector<string> vec(size);
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_int_distribution<int> charDis('a', 'z');
+    for (int i = 0; i < size; i++) {
+        string s = "";
+        for (int j = 0; j < 5; j++) s += (char)charDis(gen);
+        vec[i] = s;
+    }
+    return vec;
+}
+
+// -> MEDICIÓN DE TIEMPOS Y EXPORTACIÓN A CSV 
+
+template <typename T>
+long long measureTime(vector<T> list, int algoType) {
+    long long comp = 0, swp = 0;
+    auto start = chrono::high_resolution_clock::now();
+    
+    switch(algoType) {
+        case 1: swapSort(list, comp, swp); break;
+        case 2: bubbleSort(list, comp, swp); break;
+        case 3: selectionSort(list, comp, swp); break;
+        case 4: insertionSort(list, comp, swp); break;
+        case 5: mergeSort(list, 0, list.size() - 1); break;
+        case 6: quickSort(list, 0, list.size() - 1); break;
+        case 7: shellSort(list); break;
+    }
+
+    auto end = chrono::high_resolution_clock::now();
+    return chrono::duration_cast<chrono::nanoseconds>(end - start).count();
+}
+
+void runBenchmarkAndSaveCSV() {
+    cout << "\nProcesando pruebas y generando el archivo 'tiempos.csv'..." << endl;
+    ofstream file("tiempos.csv");
+
+    vector<string> algoNames = {"swapSort", "bubbleSort", "selectionSort", "insertionSort", "mergeSort", "quickSort", "shellSort"};
+    
+    for (int i = 1; i <= 7; i++) {
+        // Generar para Tipo 1: int
+        long long t1000_int = measureTime(generateRandomInts(1000), i);
+        long long t10000_int = measureTime(generateRandomInts(10000), i);
+        // Evitar tiempos excesivos en O(n^2) para 100,000 elementos
+        long long t100000_int = (i >= 5) ? measureTime(generateRandomInts(100000), i) : -1;
+
+        file << algoNames[i-1] << ",int," << t1000_int << "," << t10000_int << "," << t100000_int << "\n";
+        cout << algoNames[i-1] << ", int, " << t1000_int << ", " << t10000_int << ", " << t100000_int << endl;
+
+        // Generar para Tipo 2: double
+        long long t1000_dbl = measureTime(generateRandomDoubles(1000), i);
+        long long t10000_dbl = measureTime(generateRandomDoubles(10000), i);
+        long long t100000_dbl = (i >= 5) ? measureTime(generateRandomDoubles(100000), i) : -1;
+
+        file << algoNames[i-1] << ",double," << t1000_dbl << "," << t10000_dbl << "," << t100000_dbl << "\n";
+
+        // Generar para Tipo 3: string
+        long long t1000_str = measureTime(generateRandomStrings(1000), i);
+        long long t10000_str = measureTime(generateRandomStrings(10000), i);
+        long long t100000_str = (i >= 5) ? measureTime(generateRandomStrings(100000), i) : -1;
+
+        file << algoNames[i-1] << ",string," << t1000_str << "," << t10000_str << "," << t100000_str << "\n";
+    }
+
+    file.close();
+    cout << "\n Archivo 'tiempos.csv' generado exitosamente." << endl;
+}
+
+// --- MENÚ PRINCIPAL ---
+
 int main() {
-    vector<int> list = {15, 7, 3, 9, 12, 5, 2};
-    vector<int> listOriginal = list;
+    int option;
+    do {
+        cout << "    ACTIVIDAD 1.5 - ALGORITMOS DE SORT" << endl;
+        cout << "1. Probar un algoritmo con lista de prueba corta" << endl;
+        cout << "2. Generar análisis comparativo (Archivo CSV)" << endl;
+        cout << "0. Salir" << endl;
+        cout << "Selecciona una opción: ";
+        cin >> option;
 
-    print(list);
-    swapSort(list);
-    cout << "Lista ordenada: con Swap Sort" << endl;
-    print(list);
-    list = listOriginal;
-    print(list);
-    bubbleSort(list);
-    cout << "Lista ordenada: con Bubble Sort" << endl;
-    print(list);
-    list = listOriginal;
-    print(list);
-    selectionSort(list);
-    cout << "Lista ordenada: con Selection Sort" << endl;
-    print(list);
+        if (option == 1) {
+            vector<int> list = {15, 7, 3, 9, 12, 5, 2};
+            long long comp = 0, swp = 0;
+            int algoOpt;
 
-    //MERGE SORT
-    print(listOriginal);
-    cout << "tarea para clase:" << endl;
-    cout << "Lista ordenada con Merge Sort" << endl;
-    mergeSort(list, 0, list.size() - 1);
-    print(list);
+            cout << "\nVector inicial: ";
+            print(list);
 
-    //QUICK SORT
-    print(listOriginal);
-    cout << "lista ordenada: con Quick Sort" << endl;
-    quickSort(list, 0, list.size()-1);
-    print(list);
+            cout << "\n1. Swap Sort\n2. Bubble Sort\n3. Selection Sort\n4. Insertion Sort\n5. Merge Sort\n6. Quick Sort\n7. Shell Sort\nElige un algoritmo: ";
+            cin >> algoOpt;
 
-    // MERGE SORT DEL PROFE (en clase 8)
-    print(listOriginal);
-    cout << "Lista ordenada con Merge Sort del profe" << endl;
-    mergeSort_profe(list, 0, list.size()-1);
-    print(list);
+            auto start = chrono::high_resolution_clock::now();
+            switch (algoOpt) {
+                case 1: swapSort(list, comp, swp); cout << "Comparaciones: " << comp << " | Swaps: " << swp << endl; break;
+                case 2: bubbleSort(list, comp, swp); cout << "Comparaciones: " << comp << " | Swaps: " << swp << endl; break;
+                case 3: selectionSort(list, comp, swp); cout << "Comparaciones: " << comp << " | Swaps: " << swp << endl; break;
+                case 4: insertionSort(list, comp, swp); cout << "Comparaciones: " << comp << " | Swaps: " << swp << endl; break;
+                case 5: mergeSort(list, 0, list.size() - 1); break;
+                case 6: quickSort(list, 0, list.size() - 1); break;
+                case 7: shellSort(list); break;
+            }
+            auto end = chrono::high_resolution_clock::now();
+
+            cout << "Lista ordenada: ";
+            print(list);
+            cout << "Tiempo: " << chrono::duration_cast<chrono::nanoseconds>(end - start).count() << " ns" << endl;
+
+        } else if (option == 2) {
+            runBenchmarkAndSaveCSV();
+        }
+
+    } while (option != 0);
 
     return 0;
 }
