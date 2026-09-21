@@ -1,14 +1,12 @@
 //Daniela Chávez Ibarra
 //A00843645
-//#include <iostream>
 #include <string>
 #include "../include/Log.h"
 
 using namespace std;
 
-//contructores
+// constructores
 Log::Log() {
-    //valores limpios
     year = 0;
     month = "";
     day = 0;
@@ -17,8 +15,8 @@ Log::Log() {
     message = "";
     key = "";
 }
-//contrsuctor con parametros
-//aquí asigna los valores leídos del archivo seleccionado a los atributos internos del objeto
+
+// constructor con parámetros
 Log::Log(int year, string month, int day, string time, string ip, string message, string key) {
     this->year = year;
     this->month = month;
@@ -29,8 +27,7 @@ Log::Log(int year, string month, int day, string time, string ip, string message
     this->key = key;
 }
 
-//Generar Key
-//aqui transformo el mes en texto a un num de dos digito y junta todo en formato AAAAMMDDHHMMSS
+// Generar Key
 string Log::createKey() {
     string monthNum = "01";
     if (month == "Jan") monthNum = "01";
@@ -46,8 +43,10 @@ string Log::createKey() {
     else if (month == "Nov") monthNum = "11";
     else if (month == "Dec") monthNum = "12";
 
+    // Formatear el día a 2 dígitos (ej. 1 -> "01")
+    string dayStr = (day < 10 ? "0" : "") + to_string(day);
 
-    //eliminar los dos puntos del tiempo
+    // eliminar los dos puntos del tiempo
     string cleanTime = "";
     for (char c : time) {
         if (c != ':') {
@@ -55,31 +54,32 @@ string Log::createKey() {
         }
     }
 
-    //regresar clave unida 
-    return to_string(year) + monthNum + to_string(day) + cleanTime;
+    // regresar clave unida con formato fijo AAAA MM DD HHMMSS
+    return to_string(year) + monthNum + dayStr + cleanTime;
 }
 
-//getter
+// getter
 string Log::getKey() const {
     return this->key;
 }
 
-//regresar a formato original el registro 
+// regresar a formato original el registro 
 string Log::getFormattedLog() const {
-    return month + " " + to_string(day) + " " + time + " " + ip + " " + message;
+    string dayStr = (day < 10 ? "0" : "") + to_string(day);
+    return month + " " + dayStr + " " + to_string(year) + " " + time + " " + ip + " " + message;
 }
 
 // Implementar los operadores de comparación
 bool Log::operator<(const Log &other) const {
-    return this->key < other.key; // Compara si la llave de este Log es cronológicamente anterior
+    return this->key < other.key;
 }
 
 bool Log::operator>(const Log &other) const {
-    return this->key > other.key; // Compara si la llave de este Log es posterior
+    return this->key > other.key;
 }
 
 bool Log::operator==(const Log &other) const {
-    return this->key == other.key; // Compara si ambos logs ocurrieron exactamente en el mismo segundo
+    return this->key == other.key;
 }
 
 bool Log::operator!=(const Log &other) const {
