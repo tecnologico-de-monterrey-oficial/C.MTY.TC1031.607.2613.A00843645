@@ -13,12 +13,25 @@ private:
 public:
     Queue() : head(nullptr), tail(nullptr), size(0) {}
     void push(T data);
+    void push_PROFE(T data);
     void pop(T data);
     void print();
     void front(int index, T data);
 };
 
-// push
+// push_PROFE
+template <typename T>
+void Queue<T>:push_PROFE(T data) {
+   //validamos que no este vacia 
+   if (head != nullptr) {
+    //actualizamos el next de tail con un nodo nuevo
+    tail->next = new Node<T>(data);
+    //actualizamos tail con tail->next
+    tail = tail->next
+   } 
+}
+
+// push (es como si fuera un add last)
 template <typename T>
 void Queue<T>::push(T data) {
     // nodo nuevo
@@ -40,8 +53,11 @@ void Queue<T>::pop(T data) {
     head = head->next;
     delete aux;
 
+    //avance del profe en clase
     if (head != nullptr) {
-        
+        if (head == tail) {
+            Node
+        }
     }
 }
 

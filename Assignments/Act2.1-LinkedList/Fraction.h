@@ -1,5 +1,5 @@
-// David Alonso Cantú Delgado
-// A00189239
+// Daniela Chávez Ibarra
+// A00843645
 #ifndef Fraction_h
 #define Fraction_h
 #include <iostream>

@@ -1,7 +1,10 @@
 //Daniela Chavez Ibarra
 //A00843645
 #include <iostream>
+#include <memory>
 using namespace std;
+
+#include "Fraction.h"
 
 int main() {
 
@@ -21,6 +24,7 @@ int main() {
 
 
     Fraction* f= new Fraction(2, 3);
+
     f->print();
     delete f;
     //NOTA: cuando usas la flechita (->) es para acceder a los metodos de la clase, cuando usas el punto (.) es para acceder a los atributos de la clase
