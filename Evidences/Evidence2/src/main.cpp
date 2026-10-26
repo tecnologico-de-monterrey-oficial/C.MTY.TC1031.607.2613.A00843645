@@ -5,10 +5,10 @@
 #include <chrono>
 #include <map>
 #include <unordered_map>
-#include "include/Queue.h"
-#include "include/DoublyLinkedList.h"
-#include "include/Stack.h"
-#include "include/Log.h"
+#include "Queue.h"
+#include "DoublyLinkedList.h"
+#include "Stack.h"
+#include "Log.h"
 
 using namespace std;
 
@@ -53,17 +53,39 @@ int main() {
     string ultimoDiaBuscado = "";
     bool busquedaRealizada = false;
 
-    // Carga inicial automatica del archivo (puedes adaptarlo para pedir el archivo si lo prefieres)
-    string archivoElegido = "log608-1.txt";
+    // Carga interactiva del archivo
+    int opcionArchivo = 0;
+    string archivoElegido = "";
+
+    cout << "=== CARGA DE ARCHIVOS DE LOGS ===\n";
+    cout << "1. log607-1.txt\n";
+    cout << "2. log607-2.txt\n";
+    cout << "Seleccione el archivo que desea cargar: ";
+    cin >> opcionArchivo;
+
+   if (opcionArchivo == 1) {
+        archivoElegido = "data/log607-1.txt"; 
+    } else if (opcionArchivo == 2) {
+        archivoElegido = "data/log607-2.txt";
+    } else {
+        cout << "Opcion invalida. Se usara por defecto log607-1.txt\n";
+        archivoElegido = "data/log607-1.txt";
+    }
+
     cout << "Cargando archivo " << archivoElegido << "...\n";
     
+    // Carga con validacion de lineas 
     if (cargarArchivoAQueue(archivoElegido, filaLogs)) {
+        int registrosCargados = 0;
         while (!filaLogs.isEmpty()) {
             Log logActual = filaLogs.pop();
             listaLogs.addLast(logActual);
+            registrosCargados++;
         }
-        cout << "Carga y transferencia completadas con exito. Total de registros: " << listaLogs.getSize() << "\n\n";
+        cout << "Carga y transferencia completadas con exito.\n";
+        cout << "Registros cargados exitosamente: " << registrosCargados << "\n\n";
     } else {
+        cout << "No se pudo completar la carga del archivo.\n";
         return 1;
     }
 
@@ -103,7 +125,7 @@ int main() {
 
                 auto inicio = chrono::high_resolution_clock::now();
                 
-                // Llamada a tu metodo sort de la DoublyLinkedList
+                // Llamada a metodo sort de la DoublyLinkedList
                 listaLogs.sort();
                 
                 auto fin = chrono::high_resolution_clock::now();
@@ -111,7 +133,7 @@ int main() {
 
                 listaOrdenada = true;
                 cout << "Lista ordenada exitosamente.\n";
-                cout << "Algoritmo usado: Bubble Sort (o el que implementaste en Doubly)\n";
+                cout << "Algoritmo usado: Bubble Sort \n";
                 cout << "Archivo: " << archivoElegido << "\n";
                 cout << "Tamano de los datos: " << listaLogs.getSize() << "\n";
                 cout << "Tiempo de ejecucion: " << duracion.count() << " ms\n";
@@ -137,9 +159,15 @@ int main() {
                     break;
                 }
 
-                cout << "Ingrese el dia a buscar (Ejemplo: Sep 14): ";
+                cout << "Ingrese el dia a buscar en formato Mmm DD(Ejemplo: Sep 14): ";
                 cin >> ws;
                 getline(cin, ultimoDiaBuscado);
+                if (cin.fail()) {
+                cin.clear(); // Limpia el estado de error
+                cin.ignore(10000, '\n'); // Descarta la entrada corrupta
+                cout << "Entrada invalida. Intente de nuevo.\n";
+                break;
+                }
 
                 int encontrados = 0;
                 cout << "Resultados encontrados para " << ultimoDiaBuscado << ":\n";
@@ -151,7 +179,8 @@ int main() {
                     if (logFmt.rfind(ultimoDiaBuscado, 0) == 0) {
                         cout << logFmt << "\n";
                         encontrados++;
-                    } else if (encontrados > 0) {
+                    } 
+                    else if (encontrados > 0) {
                         // Si ya habiamos encontrado y el mes/dia actual ya paso, podemos romper para optimizar
                         // (Asumiendo formato estricto o comparacion de llaves)
                         break;
@@ -191,10 +220,47 @@ int main() {
             }
             case 4: {
                 cout << "\n--- OPCION 4: ESTADISTICAS DEL ARCHIVO ---\n";
-                cout << "Total de registros: " << listaLogs.getSize() << "\n";
-                // Aqui puedes integrar tus mapas de frecuencia (std::map / unordered_map)
-                cout << "(Modulo de estadisticas listo para integrarse con map)\n";
-                break;
+                if (listaLogs.getSize() == 0) {
+                        cout << "Error: No hay registros cargados.\n";
+                        break;
+                    }
+
+                    int total = listaLogs.getSize();
+                    cout << "Total de registros procesados: " << total << "\n";
+
+                    // Conteo de frecuencia de registros por fecha (Mmm DD)
+                    map<string, int> conteoFechas;
+                    for (int i = 0; i < total; i++) {
+                        // Asumiendo que getFormattedLog() inicia con la fecha "Mmm DD" (ej. "Sep 14")
+                        string logFmt = listaLogs[i].getFormattedLog();
+                        string fecha = logFmt.substr(0, 6); // Extrae los primeros 6 caracteres "Mmm DD"
+                        conteoFechas[fecha]++;
+                    }
+
+                    // Identificar el número máximo de apariciones
+                    int maxFrecuencia = 0;
+                    for (const auto& par : conteoFechas) {
+                        if (par.second > maxFrecuencia) {
+                            maxFrecuencia = par.second;
+                        }
+                    }
+
+                    // Desplegar la(s) fecha(s) con mayor cantidad de registros (Manejo de empates)
+                    cout << "\nFecha(s) con mayor cantidad de actividad (Frecuencia maxima: " << maxFrecuencia << " registros):\n";
+                    int contadorEmpates = 0;
+                    for (const auto& par : conteoFechas) {
+                        if (par.second == maxFrecuencia) {
+                            cout << " - " << par.first << " (" << par.second << " registros)\n";
+                            contadorEmpates++;
+                        }
+                    }
+
+                    if (contadorEmpates > 1) {
+                        cout << "\n[Nota de Manejo de Empates]: Se detectaron " << contadorEmpates 
+                            << " fechas empatadas con el numero maximo de registros.\n";
+                    }
+
+                    break;
             }
             case 5:
                 cout << "Saliendo del programa. Hasta luego!\n";
