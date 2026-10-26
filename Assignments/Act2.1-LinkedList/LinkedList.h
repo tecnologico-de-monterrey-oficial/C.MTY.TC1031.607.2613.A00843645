@@ -308,12 +308,4 @@ LinkedList<T>& LinkedList<T>::operator=(const LinkedList<T>& other) {
     return *this;
 }
 
-
-
-
-
-
-
-
-
 #endif /* LinkedList_h */
