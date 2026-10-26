@@ -12,7 +12,7 @@ Log::Log() {
     ip = "";
     message = "";
     key = "";
-}
+} 
 
 // constructor con parámetros
 Log::Log(int year, string month, int day, string time, string ip, string message, string key) {
