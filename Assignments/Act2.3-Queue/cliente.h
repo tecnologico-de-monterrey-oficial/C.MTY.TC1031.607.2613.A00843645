@@ -1,12 +1,9 @@
 #ifndef cliente_h
 #define cliente_h
+#include <string>
+using namespace std;
 
-
-template <typename T>
 struct Cliente {
-    T data; 
-    //std::unique_ptr<Cliente<T>> next;
-    //Cliente
     string nombre;
     int boletos;
 };

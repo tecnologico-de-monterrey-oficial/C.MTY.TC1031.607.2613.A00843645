@@ -1,75 +1,80 @@
-#ifndef queue_h
-#define queue_h
+#if !defined(Queue_h)
+#define Queue_h
 
 #include "Node.h"
-
+#include <stdexcept>
+using namespace std;
 
 template <typename T>
-class Queue{
+
+class Queue {
 private:
-    // la lista tiene head y tiene tail (stack tiene top)
     Node<T>* head;
     Node<T>* tail;
+    int sizeCount; // Contador para saber cuántos elementos hay
 public:
-    Queue() : head(nullptr), tail(nullptr), size(0) {}
-    void push(T data);
-    void push_PROFE(T data);
-    void pop(T data);
-    void print();
-    void front(int index, T data);
-};
-
-// push_PROFE
-template <typename T>
-void Queue<T>:push_PROFE(T data) {
-   //validamos que no este vacia 
-   if (head != nullptr) {
-    //actualizamos el next de tail con un nodo nuevo
-    tail->next = new Node<T>(data);
-    //actualizamos tail con tail->next
-    tail = tail->next
-   } 
-}
-
-// push (es como si fuera un add last)
-template <typename T>
-void Queue<T>::push(T data) {
-    // nodo nuevo
-    Node<T>* node = new Node<T>(data);
-    // actualizo el next del nodo nuevo para que apunte a head
-    node->next = head;
-    // actualizr head
-    head = node;
-}
-
-// pop
-template <typename T>
-void Queue<T>::pop(T data) {
-    if (head == nullptr) { 
-        cout << "lista esta vacia" << endl;
-        return;
-    }
-    Node<T>* aux = head;
-    head = head->next;
-    delete aux;
-
-    //avance del profe en clase
-    if (head != nullptr) {
-        if (head == tail) {
-            Node
+    Queue() : head(nullptr), tail(nullptr), sizeCount(0) {}
+    // Destructor para liberar memoria
+    ~Queue() {
+        while (!isEmpty()) {
+            pop();
         }
     }
+
+    bool isEmpty() const {
+        return head == nullptr;
+    }
+
+    int getSize() const {
+        return sizeCount;
+    }
+
+    void push(T data);
+    T pop();
+    T front() const;
+
+};
+    
+
+template <typename T>
+T Queue<T>::pop() {
+   if (isEmpty()) {
+        throw out_of_range("Excepción: La fila está vacía, no se pudo borrar.");
+    }
+    
+    Node<T>* aux = head;
+    T data = aux->data; // guarda el valor para retornarlo
+    
+    head = head->next;
+    if (head == nullptr) {
+        tail = nullptr; // Si era el único elemento, la cola queda vacía
+    }
+    
+    delete aux;
+    sizeCount--;
+    return data; // return
 }
 
-// front
-template <typename T> 
-void Queue<T>::front(int index, T data) {
-
+template <typename T>
+void Queue<T>::push(T data) {
+    // validamos que no este vacía
+    Node<T>* newNode = new Node<T>(data);
+    if (head != nullptr) {
+        tail->next = newNode;
+        tail = newNode;
+    } else {
+        head = newNode;
+        tail = newNode;
+    }
+    sizeCount++;
 }
 
+template <typename T>
+T Queue<T>::front() const {
+    if (isEmpty()) {
+        throw out_of_range("La fila esta vacia, no hay datos en el Queue.");
+    }
+    return head->data;
+}
 
-
-
-
-
-#endif /*queue_h*/
+#endif // Queue_h
